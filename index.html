@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema RAT Digital</title>
+  <link rel="icon" type="image/png" href="./img/imgnav.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  
+  <!--[if lt IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <![endif]-->
+
+  <!-- SCRIPT DE BLOQUEIO / CADEADO -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const authUrl = 'https://pfsspthucexjtthlesrh.supabase.co'; 
+    const authKey = 'sb_publishable_brfo5xMWne-hmFekJS2lng_q0pMo4q6';
+    const authSupabase = window.supabase.createClient(authUrl, authKey);
+
+    async function verificarAcesso() {
+      const { data: { session } } = await authSupabase.auth.getSession();
+      
+      if (!session) {
+        window.location.replace('login.html');
+      }
+
+      authSupabase.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_OUT' || !session) {
+          window.location.replace('login.html');
+        }
+      });
+    }
+    
+    // Roda a verificação apenas quando a página estiver pronta
+    document.addEventListener("DOMContentLoaded", verificarAcesso);
+
+    // Função de Logout
+    async function fazerLogout() {
+      await authSupabase.auth.signOut();
+    }
+  </script>
+</head>
+
+<body class="bg-light">
+
+  <!-- CABEÇALHO -->
+  <nav class="navbar navbar-dark bg-primary shadow-sm">
+    <div class="container d-flex justify-content-between align-items-center">
+      <span class="navbar-brand mb-0 h1 d-flex align-items-center gap-2">
+        <i class="bi bi-file-earmark-check-fill"></i>
+        <span>Sistema RAT Digital</span>
+      </span>
+      <button onclick="fazerLogout()" class="btn btn-danger btn-sm fw-bold">Sair da Conta</button>
+    </div>
+  </nav>
+
+  <!-- CONTEUDO -->
+  <main class="container py-4" style="max-width: 650px;">
+
+    <div class="text-center my-4">
+      <h2 class="fw-bold text-dark">
+        Relatórios de Atendimento
+      </h2>
+      <p class="text-muted">
+        Selecione o modelo de RAT para preencher no celular ou computador.
+      </p>
+    </div>
+
+    <!-- LISTA DE RATs -->
+    <div class="list-group shadow-sm mb-4">
+
+      <!-- RAT DELFIA -->
+      <a href="rat-modelo-1.html" class="list-group-item list-group-item-action p-3">
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center">
+            <div class="bg-primary text-white rounded-3 p-3 me-3 fs-4 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+              <img src="./img/DELFLA.png" alt="Delfia" width="70" height="70">
+            </div>
+            <div>
+              <h5 class="mb-1 fw-semibold text-dark">RAT - Delfia</h5>
+              <p class="mb-0 text-muted small">Instalações, configuração de rede e validações.</p>
+            </div>
+          </div>
+          <i class="bi bi-chevron-right text-muted fs-5 ms-2"></i>
+        </div>
+      </a>
+
+      <!-- RAT SANTANDER -->
+      <a href="rat-modelo-2.html" class="list-group-item list-group-item-action p-3">
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center">
+            <div class="bg-primary text-white rounded-3 p-3 me-3 fs-4 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+              <img src="./img/inelcom.png" alt="Santander" width="70" height="70">
+            </div>
+            <div>
+              <h5 class="mb-1 fw-semibold text-dark">RAT - Santander</h5>
+              <p class="mb-0 text-muted small">Instalações, configuração de rede e validações.</p>
+            </div>
+          </div>
+          <i class="bi bi-chevron-right text-muted fs-5 ms-2"></i>
+        </div>
+      </a>
+
+      <!-- RAT IK -->
+      <a href="rat-modelo-3.html" class="list-group-item list-group-item-action p-3">
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-center">
+            <div class="bg-primary text-white rounded-3 p-3 me-3 fs-4 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+              <img src="./img/IK.png" alt="IK" width="70" height="70">
+            </div>
+            <div>
+              <h5 class="mb-1 fw-semibold text-dark">RAT - IK</h5>
+              <p class="mb-0 text-muted small">Instalações, configuração de rede e validações.</p>
+            </div>
+          </div>
+          <i class="bi bi-chevron-right text-muted fs-5 ms-2"></i>
+        </div>
+      </a>
+
+    </div> 
+  </main>
+
+  <!-- RODAPE -->
+  <footer class="container py-4 mt-4">
+    <div class="row justify-content-center align-items-center text-center g-0">
+
+      <!-- B.I.T -->
+      <div class="col-3 col-md-2 d-flex justify-content-center">
+        <a href="https://gabriel-brandao.dev" target="_blank" rel="noopener noreferrer" class="d-flex flex-column align-items-center gap-2 text-decoration-none">
+          <img src="./img/icone-bit.png" alt="Logo B.I.T" width="100" height="100" class="img-fluid">
+          <span>gabriel-brandao.dev</span>
+        </a>
+      </div>
+
+      <!-- Aperto de mãos -->
+      <div class="col-2 col-md-1 d-flex justify-content-center align-items-center">
+        <i class="fa-solid fa-handshake fs-3 text-primary" aria-hidden="true"></i>
+      </div>
+
+      <!-- Benne -->
+      <div class="col-3 col-md-2 d-flex justify-content-center">
+        <a href="https://bennetechforbusiness.netlify.app/" target="_blank" rel="noopener noreferrer" class="d-flex flex-column align-items-center gap-2 text-decoration-none">
+          <img src="./img/benne.png" alt="Logo Benne" width="100" height="100" class="img-fluid">
+          <span>Benne</span>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Copyright -->
+    <div class="text-center mt-2">
+      <p class="mb-0 fs-5">&copy; Copyright 2026 B.I.T Soluções em T.I</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

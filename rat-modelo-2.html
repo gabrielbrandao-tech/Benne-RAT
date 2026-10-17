@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAT - Santander</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    .modal-fullscreen-mobile {
+      padding: 0 !important;
+    }
+
+    .modal-fullscreen-mobile .modal-dialog {
+      max-width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    .modal-fullscreen-mobile .modal-content {
+      height: 100%;
+      border-radius: 0;
+    }
+
+    #signature-canvas {
+      border: 2px dashed #6c757d;
+      background-color: #ffffff;
+      touch-action: none;
+      cursor: crosshair;
+      width: 100%;
+      height: 300px;
+    }
+  </style>
+</head>
+<!-- SCRIPT DE BLOQUEIO / CADEADO -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const authUrl = 'https://pfsspthucexjtthlesrh.supabase.co'; 
+    const authKey = 'sb_publishable_brfo5xMWne-hmFekJS2lng_q0pMo4q6';
+    const authSupabase = window.supabase.createClient(authUrl, authKey);
+
+    async function verificarAcesso() {
+      const { data: { session } } = await authSupabase.auth.getSession();
+
+      if (!session) {
+        window.location.replace('login.html');
+      }
+
+      authSupabase.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_OUT' || !session) {
+          window.location.replace('login.html');
+        }
+      });
+    }
+    
+    document.addEventListener("DOMContentLoaded", verificarAcesso);
+  </script>
+
+<body class="bg-light">
+
+  <main class="container py-4" style="max-width: 800px;">
+    <div class="card shadow-sm">
+
+      <div class="card-header bg-danger text-white">
+        <h4 class="mb-0 fs-5">Preenchimento de RAT - Santander</h4>
+      </div>
+
+      <div class="card-body">
+        <form id="ratForm">
+
+          <!-- IDENTIFICACAO & LOCALIZACAO -->
+          <h5 class="text-secondary border-bottom pb-2">Identificação do Chamado</h5>
+          <div class="row g-2 mb-4">
+            <div class="col-4">
+              <label class="form-label text-muted small mb-0">Nº Chamado</label>
+              <input type="text" id="chamado" class="form-control form-control-sm">
+            </div>
+            <div class="col-4">
+              <label class="form-label text-muted small mb-0">Agência</label>
+              <input type="text" id="agencia" class="form-control form-control-sm">
+            </div>
+            <div class="col-8">
+              <label class="form-label text-muted small mb-0">Endereço</label>
+              <input type="text" id="endereco" class="form-control form-control-sm">
+            </div>
+            <div class="col-4">
+              <label class="form-label text-muted small mb-0">Número</label>
+              <input type="text" id="numero" class="form-control form-control-sm">
+            </div>
+            <div class="col-8">
+              <label class="form-label text-muted small mb-0">complemento</label>
+              <input type="text" id="complemento" class="form-control form-control-sm">
+            </div>
+            <div class="col-5">
+              <label class="form-label text-muted small mb-0">Bairro</label>
+              <input type="text" id="bairro" class="form-control form-control-sm">
+            </div>
+            <div class="col-5">
+              <label class="form-label text-muted small mb-0">Município</label>
+              <input type="text" id="municipio" class="form-control form-control-sm" value="São Paulo">
+            </div>
+            <div class="col-2">
+              <label class="form-label text-muted small mb-0">UF</label>
+              <input type="text" id="uf" class="form-control form-control-sm" value="SP">
+            </div>
+          </div>
+          <div class="col-8">
+            <label class="form-label text-muted small mb-0">DEFEITO/CAUSA</label>
+            <input type="text" id="defeitoCausa" class="form-control form-control-sm">
+          </div>
+
+          <!-- HORARIOS -->
+          <h5 class="text-secondary border-bottom pb-2">Horários</h5>
+          <div class="row g-2 mb-4">
+            <div class="col-3">
+              <label class="form-label text-muted small mb-0">Partida</label>
+              <input type="text" id="hrPartida" class="form-control form-control-sm" value="0700">
+            </div>
+            <div class="col-3">
+              <label class="form-label text-muted small mb-0">Chegada</label>
+              <input type="text" id="hrChegada" class="form-control form-control-sm" value="0800">
+            </div>
+            <div class="col-3">
+              <label class="form-label text-muted small mb-0">Início</label>
+              <input type="text" id="hrInicio" class="form-control form-control-sm" value="0830">
+            </div>
+            <div class="col-3">
+              <label class="form-label text-muted small mb-0">Término</label>
+              <input type="text" id="hrTermino" class="form-control form-control-sm" value="1145">
+            </div>
+          </div>
+
+          <!-- EQUIPAMENTO A SER ATENDIDO -->
+          <h5 class="text-secondary border-bottom pb-2 mt-3">Equipamento a Ser Atendido</h5>
+          <div class="row g-2 mb-4">
+            <div class="col-md-4">
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_nettop_lojas"><label class="form-check-label small" for="eq_nettop_lojas">Nettop Lojas</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_nettop_regional"><label class="form-check-label small" for="eq_nettop_regional">Nettop / Desktop Regional</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_nettop_tv"><label class="form-check-label small" for="eq_nettop_tv">Nettop TV</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_android_box"><label class="form-check-label small" for="eq_android_box">Android Box</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_notebook_lojas"><label class="form-check-label small" for="eq_notebook_lojas">Notebook Lojas</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_notebook_corp"><label class="form-check-label small" for="eq_notebook_corp">Notebook Corporativo</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_servidor"><label class="form-check-label small" for="eq_servidor">Servidor</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_servidor_dlbc"><label class="form-check-label small" for="eq_servidor_dlbc">Servidor DLBC</label></div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_teclado"><label class="form-check-label small" for="eq_teclado">Teclado</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_mouse"><label class="form-check-label small" for="eq_mouse">Mouse</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_monitor"><label class="form-check-label small" for="eq_monitor">Monitor</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_scanner"><label class="form-check-label small" for="eq_scanner">Scanner de Cheques</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_imp_recibos"><label class="form-check-label small" for="eq_imp_recibos">Impressora de recibos</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_leitora_doc"><label class="form-check-label small" for="eq_leitora_doc">Leitora de documentos</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_leitora_barras"><label class="form-check-label small" for="eq_leitora_barras">Leitora de código de barras</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_imp_autenticadora"><label class="form-check-label small" for="eq_imp_autenticadora">Impressora Autenticadora</label></div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_pinpad_cripto"><label class="form-check-label small" for="eq_pinpad_cripto">PinPad Cripto</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_pin_liso"><label class="form-check-label small" for="eq_pin_liso">Pin Liso</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_adaptador_pin"><label class="form-check-label small" for="eq_adaptador_pin">Adaptador Pin Liso (Azul)</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_hub_usb"><label class="form-check-label small" for="eq_hub_usb">HUB USB</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_leitor_digital"><label class="form-check-label small" for="eq_leitor_digital">Leitor de Digital</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_webcam"><label class="form-check-label small" for="eq_webcam">Webcam</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_telefone"><label class="form-check-label small" for="eq_telefone">Telefone Digital</label></div>
+            </div>
+          </div>
+
+          <!--  EQUIPAMENTOS -->
+          <h5 class="text-secondary border-bottom pb-2">Equipamentos Antigo e Novo</h5>
+          <div class="row g-3 mb-4">
+            <div class="col-md-6 border-end">
+              <h6 class="text-danger">Equipamento Antigo</h6>
+              <input type="text" id="patAntigo" class="form-control form-control-sm mb-1" placeholder="Património">
+              <input type="text" id="serieAntigo" class="form-control form-control-sm mb-1" placeholder="Série">
+              <input type="text" id="modeloAntigo" class="form-control form-control-sm mb-1" placeholder="Modelo">
+              <input type="text" id="hostAntigo" class="form-control form-control-sm mb-1" placeholder="Host">
+              <input type="text" id="macAntigo" class="form-control form-control-sm" placeholder="MAC Address">
+            </div>
+            <div class="col-md-6">
+              <h6 class="text-success">Equipamento Novo</h6>
+              <input type="text" id="patNovo" class="form-control form-control-sm mb-1" placeholder="Património">
+              <input type="text" id="serieNovo" class="form-control form-control-sm mb-1" placeholder="Série">
+              <input type="text" id="modeloNovo" class="form-control form-control-sm mb-1" placeholder="Modelo">
+              <input type="text" id="hostNovo" class="form-control form-control-sm mb-1" placeholder="Host">
+              <input type="text" id="macNovo" class="form-control form-control-sm" placeholder="MAC Address">
+            </div>
+          </div>
+
+          <!-- DESCRIÇÃO -->
+          <h5 class="text-secondary border-bottom pb-2">Descrição</h5>
+          <div class="mb-4">
+            <textarea id="descricao" class="form-control" rows="3" placeholder="Descreva os serviços..."></textarea>
+            <small class="text-muted">A quebra de linha será feita automaticamente no PDF.</small>
+          </div>
+
+          <!-- FECHAMENTO -->
+          <h5 class="text-secondary border-bottom pb-2">Fechamento e Responsáveis</h5>
+          <div class="row g-2 mb-4">
+            <div class="col-12">
+              <label class="form-label text-muted small mb-0">Nome do Suporte</label>
+              <input type="text" id="suporte" class="form-control form-control-sm">
+            </div>
+            <div class="col-8">
+              <label class="form-label text-muted small mb-0">Nome do Tecnico</label>
+              <input type="text" id="tecnico" class="form-control form-control-sm" value="Gabriel Baptista Brandão">
+            </div>
+            <div class="col-8">
+              <label class="form-label text-muted small mb-0">documento Tecnico</label>
+              <input type="text" id="documentotecnico" class="form-control form-control-sm" value="64.192.490/0001-58">
+            </div>
+            <div class="col-8">
+              <label class="form-label text-muted small mb-0">Responsável (Cliente)</label>
+              <input type="text" id="responsavel" class="form-control form-control-sm">
+            </div>
+            <div class="col-4">
+              <label class="form-label text-muted small mb-0">Documento</label>
+              <input type="text" id="documento" class="form-control form-control-sm">
+            </div>
+            <div class="col-6">
+              <label class="form-label text-muted small mb-0">Local</label>
+              <input type="text" id="local" class="form-control form-control-sm" value="São Paulo - SP">
+            </div>
+            <div class="col-6">
+              <label class="form-label text-muted small mb-0">Data</label>
+              <input type="text" id="data" class="form-control form-control-sm">
+            </div>
+          </div>
+
+          <!-- ASSINATURAS DIGITAIS -->
+          <h5 class="text-secondary border-bottom pb-2">Assinaturas</h5>
+          <div class="row g-2 mb-4">
+            <div class="col-6">
+              <button type="button" class="btn btn-outline-danger w-100 py-2" onclick="openSignature('responsavel')">
+                <span id="statusAssResponsavel">✍️ Assinatura Responsável</span>
+              </button>
+            </div>
+            <div class="col-6">
+              <button type="button" class="btn btn-outline-secondary w-100 py-2" onclick="openSignature('tecnico')">
+                <span id="statusAsstecnico">✍️ Assinatura Técnico</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- BOTAO GERAR -->
+          <div class="d-grid gap-2">
+            <button type="button" id="btnGerar" class="btn btn-success btn-lg fw-bold">
+              GERAR E COMPARTILHAR PDF
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL DE ASSINATURA -->
+  <div class="modal fade modal-fullscreen-mobile" id="signatureModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitle">Assine no quadro abaixo</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body d-flex flex-column align-items-center justify-content-center bg-light">
+          <canvas id="signature-canvas"></canvas>
+          <div class="mt-3 w-100 d-flex justify-content-between">
+            <button type="button" id="btnClearSignature" class="btn btn-warning fw-bold">Limpar</button>
+            <button type="button" class="btn btn-primary fw-bold" onclick="saveSignature()">Confirmar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    document.getElementById('data').value = new Date().toLocaleDateString('pt-BR');
+
+    // CONTROLO DE DUPLA ASSINATURA
+    const canvas = document.getElementById("signature-canvas");
+    const ctx = canvas.getContext("2d");
+    const sigModal = new bootstrap.Modal(document.getElementById('signatureModal'));
+
+    let isDrawing = false;
+    let currentSigner = '';
+    let signaturesData = { responsavel: null, tecnico: null };
+
+    function resizeCanvas() {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width - 32;
+      canvas.height = 300;
+      ctx.lineWidth = 2.5;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.strokeStyle = "#00008b";
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+    document.getElementById("signatureModal").addEventListener("shown.bs.modal", resizeCanvas);
+
+    function openSignature(type) {
+      currentSigner = type;
+      document.getElementById("modalTitle").innerText = type === 'responsavel' ? 'Assinatura do Responsável' : 'Assinatura do Técnico';
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      sigModal.show();
+    }
+
+    function saveSignature() {
+      signaturesData[currentSigner] = canvas.toDataURL("image/png");
+      const btnId = currentSigner === 'responsavel' ? 'statusAssResponsavel' : 'statusAsstecnico';
+      document.getElementById(btnId).innerText = "✅ Registado!";
+      document.getElementById(btnId).parentElement.classList.replace('btn-outline-danger', 'btn-success');
+      document.getElementById(btnId).parentElement.classList.replace('btn-outline-secondary', 'btn-success');
+      sigModal.hide();
+    }
+
+    document.getElementById("btnClearSignature").addEventListener("click", () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      signaturesData[currentSigner] = null;
+    });
+
+    function getPos(e) {
+      const rect = canvas.getBoundingClientRect();
+      const x = e.touches ? e.touches[0].clientX : e.clientX;
+      const y = e.touches ? e.touches[0].clientY : e.clientY;
+      return { x: x - rect.left, y: y - rect.top };
+    }
+
+    const startDrawing = (e) => { e.preventDefault(); isDrawing = true; ctx.beginPath(); ctx.moveTo(getPos(e).x, getPos(e).y); };
+    const draw = (e) => { if (!isDrawing) return; e.preventDefault(); ctx.lineTo(getPos(e).x, getPos(e).y); ctx.stroke(); };
+    const stopDrawing = () => { isDrawing = false; };
+
+    canvas.addEventListener("mousedown", startDrawing);
+    canvas.addEventListener("mousemove", draw);
+    canvas.addEventListener("mouseup", stopDrawing);
+    canvas.addEventListener("mouseleave", stopDrawing);
+    canvas.addEventListener("touchstart", startDrawing, { passive: false });
+    canvas.addEventListener("touchmove", draw, { passive: false });
+    canvas.addEventListener("touchend", stopDrawing);
+
+    // GERAR O PDF VIA SUPABASE
+    document.getElementById("btnGerar").addEventListener("click", async function () {
+      const btn = document.getElementById("btnGerar");
+
+      btn.disabled = true;
+      btn.innerText = "A Processar PDF no Servidor...";
+      btn.classList.remove('btn-danger', 'btn-primary');
+      btn.classList.add('btn-success');
+
+      const oldBackupBtn = document.getElementById("btnBackupDownload");
+      if (oldBackupBtn) oldBackupBtn.remove();
+
+      // Mapeia os Checkboxes para enviar ao servidor
+      const idsEquipamentos = [
+        'eq_nettop_lojas', 'eq_nettop_regional', 'eq_nettop_tv', 'eq_android_box', 'eq_notebook_lojas', 'eq_notebook_corp', 'eq_servidor', 'eq_servidor_dlbc',
+        'eq_teclado', 'eq_mouse', 'eq_monitor', 'eq_scanner', 'eq_imp_recibos', 'eq_leitora_doc', 'eq_leitora_barras', 'eq_imp_autenticadora',
+        'eq_pinpad_cripto', 'eq_pin_liso', 'eq_adaptador_pin', 'eq_hub_usb', 'eq_leitor_digital', 'eq_webcam', 'eq_telefone'
+      ];
+      
+      const equipamentosMarcados = {};
+      idsEquipamentos.forEach(id => {
+        const el = document.getElementById(id);
+        equipamentosMarcados[id] = el ? el.checked : false;
+      });
+
+      // Constrói o JSON com todos os dados do formulário
+      const pacoteDeDados = {
+        chamado: document.getElementById("chamado").value,
+        agencia: document.getElementById("agencia").value,
+        endereco: document.getElementById("endereco").value,
+        numero: document.getElementById("numero").value,
+        complemento: document.getElementById("complemento").value,
+        bairro: document.getElementById("bairro").value,
+        municipio: document.getElementById("municipio").value,
+        uf: document.getElementById("uf").value,
+        defeitoCausa: document.getElementById("defeitoCausa").value,
+        hrPartida: document.getElementById("hrPartida").value,
+        hrChegada: document.getElementById("hrChegada").value,
+        hrInicio: document.getElementById("hrInicio").value,
+        hrTermino: document.getElementById("hrTermino").value,
+        patAntigo: document.getElementById("patAntigo").value,
+        serieAntigo: document.getElementById("serieAntigo").value,
+        modeloAntigo: document.getElementById("modeloAntigo").value,
+        hostAntigo: document.getElementById("hostAntigo").value,
+        macAntigo: document.getElementById("macAntigo").value,
+        patNovo: document.getElementById("patNovo").value,
+        serieNovo: document.getElementById("serieNovo").value,
+        modeloNovo: document.getElementById("modeloNovo").value,
+        hostNovo: document.getElementById("hostNovo").value,
+        macNovo: document.getElementById("macNovo").value,
+        descricao: document.getElementById("descricao").value,
+        suporte: document.getElementById("suporte").value,
+        tecnico: document.getElementById("tecnico").value,
+        documentotecnico: document.getElementById("documentotecnico").value,
+        responsavel: document.getElementById("responsavel").value,
+        documento: document.getElementById("documento").value,
+        local: document.getElementById("local").value,
+        data: document.getElementById("data").value,
+        equipamentosMarcados: equipamentosMarcados,
+        assinaturaResponsavel: signaturesData.responsavel,
+        assinaturaTecnico: signaturesData.tecnico
+      };
+
+      const urlSupabase = 'https://pfsspthucexjtthlesrh.supabase.co/functions/v1/santander-api';
+      const anonKey = 'sb_publishable_brfo5xMWne-hmFekJS2lng_q0pMo4q6'; 
+
+      try {
+        const response = await fetch(urlSupabase, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${anonKey}`,
+            'apikey': anonKey
+          },
+          body: JSON.stringify(pacoteDeDados)
+        });
+
+        if (!response.ok) {
+            const erroTexto = await response.text();
+            throw new Error(erroTexto || "Erro ao conectar com o servidor.");
+        }
+
+        const blobPdf = await response.blob();
+        const numChamado = document.getElementById("chamado").value || "SemChamado";
+        const fileName = `RAT_SANTANDER_${numChamado}.pdf`;
+        const downloadUrl = URL.createObjectURL(blobPdf);
+
+        const btnBackup = document.createElement("a");
+        btnBackup.id = "btnBackupDownload";
+        btnBackup.href = downloadUrl;
+        btnBackup.download = fileName;
+        btnBackup.className = "btn btn-warning btn-lg fw-bold w-100 mt-2";
+        btnBackup.innerText = "⬇️ BAIXAR PDF MANUALMENTE (CLIQUE AQUI)";
+        btn.parentNode.appendChild(btnBackup);
+
+        btn.innerText = "✅ PDF GERADO COM SUCESSO!";
+        btn.classList.replace('btn-primary', 'btn-success');
+
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const file = new File([blobPdf], fileName, { type: "application/pdf" });
+
+        if (isMobile && navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({ files: [file], title: "RAT Santander", text: "Segue a RAT preenchida." });
+          } catch (e) {
+            console.log("Usuário cancelou o compartilhamento no celular.");
+          }
+        } 
+        else {
+          const a = document.createElement("a");
+          a.href = downloadUrl;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        }
+      } catch (error) {
+        btn.classList.replace('btn-success', 'btn-danger');
+        btn.innerText = "ERRO: " + error.message;
+        console.error(error);
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

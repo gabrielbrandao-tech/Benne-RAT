@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Benne & B.I.T RAT</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <!-- Biblioteca do Supabase (Mudei o servidor para um mais estável) -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  
+  <!-- Biblioteca Particles.js para o efeito de rede no fundo -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+
+  <style>
+    body, html {
+      margin: 0; padding: 0; height: 100%;
+      background-color: #070b19; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden;
+    }
+    #particles-js { position: absolute; width: 100%; height: 100%; z-index: 1; }
+    .login-wrapper { position: relative; z-index: 2; height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    
+    .glass-card {
+      background: rgba(12, 25, 56, 0.6); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(13, 110, 253, 0.4); box-shadow: 0 0 30px rgba(13, 110, 253, 0.15), inset 0 0 20px rgba(13, 110, 253, 0.05);
+      border-radius: 16px; padding: 40px 30px; text-align: center; max-width: 450px; width: 100%; color: #ffffff;
+    }
+    .glass-card h2 { color: #5ea8ff; font-weight: 700; margin-bottom: 5px; font-size: 1.5rem; text-shadow: 0 0 10px rgba(94, 168, 255, 0.5); }
+    .glass-card p { font-size: 0.85rem; color: #a0b8d8; margin-bottom: 2px; }
+    .glass-card .subtitle { margin-bottom: 30px; }
+
+    .form-control { background-color: rgba(0, 0, 0, 0.4) !important; border: 1px solid rgba(13, 110, 253, 0.5) !important; color: #ffffff !important; border-radius: 8px; }
+    .form-control:focus { box-shadow: 0 0 10px rgba(13, 110, 253, 0.5) !important; border-color: #0d6efd !important; }
+    .form-control::placeholder { color: #5a739c; }
+    .form-label { color: #8cb4e6; text-align: left; display: block; margin-bottom: 5px; }
+
+    .btn-neon {
+      background: rgba(13, 110, 253, 0.1); color: #5ea8ff; border: 1px solid #0d6efd; border-radius: 8px; padding: 10px; transition: all 0.3s ease;
+      box-shadow: inset 0 0 10px rgba(13, 110, 253, 0.2), 0 0 10px rgba(13, 110, 253, 0.2);
+    }
+    .btn-neon:hover { background: #0d6efd; color: #ffffff; box-shadow: 0 0 20px rgba(13, 110, 253, 0.6); }
+    .btn-neon:disabled { opacity: 0.6; cursor: not-allowed; }
+    .alert-danger { background-color: rgba(220, 53, 69, 0.2); border-color: rgba(220, 53, 69, 0.5); color: #ff8c97; }
+  </style>
+</head>
+<body>
+
+  <!-- Fundo Animado -->
+  <div id="particles-js"></div>
+
+  <!-- Cartão de Login -->
+  <div class="login-wrapper">
+    <div class="glass-card">
+      
+      <!-- LOGÓTIPO -->
+      <div class="text-center mb-4">
+        <img src="./img/bfusion.png" 
+             alt="Logótipo Benne Tech" 
+             class="rounded-circle border border-2 border-primary bg-white shadow-lg" 
+             style="width: 180px; height: 180px; object-fit: cover;">
+      </div>
+
+      <h2>Benne & B.I.T</h2>
+      <div class="subtitle">
+        <p>Tecnologia - Outsourcing - Business</p>
+        <p>Somos uma empresa focada em Field Service</p>
+        <p>Trazendo Confiabilidade para o seu Negócio</p>
+      </div>
+
+      <div id="msgErro" class="alert alert-danger d-none small py-2 fw-bold" role="alert"></div>
+
+      <!-- TRAVÁMOS O FORMULÁRIO AQUI (onsubmit) PARA NUNCA RECARREGAR A PÁGINA -->
+      <form id="formLogin" onsubmit="event.preventDefault(); fazerLogin();">
+        <div class="mb-3">
+          <label class="form-label small">E-mail de Acesso</label>
+          <input type="email" id="email" class="form-control text-center" placeholder="ex: jose@user.com" required>
+        </div>
+        <div class="mb-4">
+          <label class="form-label small">Senha</label>
+          <input type="password" id="senha" class="form-control text-center" placeholder="••••••••" required>
+        </div>
+        <button type="submit" id="btnEntrar" class="btn btn-neon w-100 fw-bold">
+          ENTRAR NO SISTEMA
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- SCRIPT DE LOGIN BLINDADO COM DETETOR DE ERROS -->
+  <script>
+    async function fazerLogin() {
+      const btn = document.getElementById('btnEntrar');
+      const msgErro = document.getElementById('msgErro');
+      const email = document.getElementById('email').value;
+      const senha = document.getElementById('senha').value;
+
+      try {
+        btn.disabled = true;
+        btn.innerText = "A INICIAR...";
+        msgErro.classList.add('d-none');
+
+        // Verifica se a biblioteca do Supabase conseguiu carregar
+        if (typeof window.supabase === 'undefined') {
+            throw new Error("A internet bloqueou a ligação. Desative o seu AdBlocker.");
+        }
+
+        const supabaseUrl = 'https://pfsspthucexjtthlesrh.supabase.co';
+        const supabaseKey = 'sb_publishable_brfo5xMWne-hmFekJS2lng_q0pMo4q6';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        btn.innerText = "A VERIFICAR CREDENCIAIS...";
+
+        // Faz o login no Supabase
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email: email,
+          password: senha,
+        });
+
+        if (error) {
+          msgErro.innerText = "E-mail ou senha incorretos!";
+          msgErro.classList.remove('d-none');
+          btn.disabled = false;
+          btn.innerText = "ENTRAR NO SISTEMA";
+        } else {
+          btn.innerText = "ACESSO PERMITIDO!";
+          btn.style.background = "#198754"; 
+          btn.style.borderColor = "#198754";
+          btn.style.boxShadow = "0 0 20px rgba(25, 135, 84, 0.6)";
+          btn.style.color = "#ffffff";
+          
+          setTimeout(() => {
+            window.location.href = 'index.html'; 
+          }, 600);
+        }
+      } catch (err) {
+        // Se algo crachar, vai aparecer o erro vermelho na tela em vez da página piscar
+        msgErro.innerText = "ERRO TÉCNICO: " + err.message;
+        msgErro.classList.remove('d-none');
+        btn.disabled = false;
+        btn.innerText = "TENTAR NOVAMENTE";
+      }
+    }
+  </script>
+
+  <!-- SCRIPT DA ANIMAÇÃO DE FUNDO -->
+  <script>
+    if(typeof particlesJS !== 'undefined') {
+      particlesJS("particles-js", {
+        "particles": {
+          "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
+          "color": { "value": "#0d6efd" },
+          "shape": { "type": "circle" },
+          "opacity": { "value": 0.4, "random": false },
+          "size": { "value": 3, "random": true },
+          "line_linked": { "enable": true, "distance": 150, "color": "#0d6efd", "opacity": 0.2, "width": 1 },
+          "move": { "enable": true, "speed": 1.5, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
+        },
+        "interactivity": {
+          "detect_on": "canvas",
+          "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" }, "resize": true },
+          "modes": { "grab": { "distance": 140, "line_linked": { "opacity": 0.8 } }, "push": { "particles_nb": 3 } }
+        },
+        "retina_detect": true
+      });
+    }
+  </script>
+
+</body>
+</html>
