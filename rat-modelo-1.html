@@ -6,17 +6,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RAT - Preenchimento Digital</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
- 
+
   <!-- O script do pdf-lib foi removido daqui -->
 
   <!--[if lt IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
   <![endif]-->
 
- <style>
-    .modal-fullscreen-mobile { padding: 0 !important; }
-    .modal-fullscreen-mobile .modal-dialog { max-width: 100%; height: 100%; margin: 0; }
-    .modal-fullscreen-mobile .modal-content { height: 100%; border-radius: 0; }
+  <style>
+    .modal-fullscreen-mobile {
+      padding: 0 !important;
+    }
+
+    .modal-fullscreen-mobile .modal-dialog {
+      max-width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    .modal-fullscreen-mobile .modal-content {
+      height: 100%;
+      border-radius: 0;
+    }
+
     #signature-canvas {
       border: 2px dashed #6c757d;
       background-color: #ffffff;
@@ -27,29 +39,28 @@
     }
   </style>
 </head>
-<!-- SCRIPT DE BLOQUEIO / CADEADO -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const authUrl = 'https://pfsspthucexjtthlesrh.supabase.co'; 
-    const authKey = 'sb_publishable_brfo5xMWne-hmFekJS2lng_q0pMo4q6';
-    const authSupabase = window.supabase.createClient(authUrl, authKey);
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const authUrl = 'https://pfsspthucexjtthlesrh.supabase.co';
+  const authKey = 'sb_publishable_brfo5xMWne-hmFekJS2lng_q0pMo4q6';
+  const authSupabase = window.supabase.createClient(authUrl, authKey);
 
-    async function verificarAcesso() {
-      const { data: { session } } = await authSupabase.auth.getSession();
+  async function verificarAcesso() {
+    const { data: { session } } = await authSupabase.auth.getSession();
 
-      if (!session) {
+    if (!session) {
+      window.location.replace('login.html');
+    }
+
+    authSupabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT' || !session) {
         window.location.replace('login.html');
       }
+    });
+  }
 
-      authSupabase.auth.onAuthStateChange((event, session) => {
-        if (event === 'SIGNED_OUT' || !session) {
-          window.location.replace('login.html');
-        }
-      });
-    }
-    
-    document.addEventListener("DOMContentLoaded", verificarAcesso);
-  </script>
+  document.addEventListener("DOMContentLoaded", verificarAcesso);
+</script>
 
 <body class="bg-light">
 
@@ -83,46 +94,61 @@
             </div>
           </div>
           <div class="col-12 mt-3">
-              <label class="form-label text-muted small mb-0">Endereço</label>
-              <input type="text" id="endereço" class="form-control form-control-sm" placeholder="Endereço do Cliente">
+            <label class="form-label text-muted small mb-0">Endereço</label>
+            <input type="text" id="endereço" class="form-control form-control-sm" placeholder="Endereço do Cliente">
           </div>
 
           <!-- EQUIPAMENTOS -->
           <h5 class="text-secondary border-bottom pb-2 mt-4">Equipamentos</h5>
           <div id="equipamentos-container">
             <div class="row g-1 mb-2">
-              <div class="col-5"><input type="text" id="eq1_marca" class="form-control form-control-sm" placeholder="Marca (Eq 1)"></div>
-              <div class="col-4"><input type="text" id="eq1_serie" class="form-control form-control-sm" placeholder="Série"></div>
-              <div class="col-3"><input type="text" id="eq1_pat" class="form-control form-control-sm" placeholder="Patrimônio"></div>
+              <div class="col-5"><input type="text" id="eq1_marca" class="form-control form-control-sm"
+                  placeholder="Marca (Eq 1)"></div>
+              <div class="col-4"><input type="text" id="eq1_serie" class="form-control form-control-sm"
+                  placeholder="Série"></div>
+              <div class="col-3"><input type="text" id="eq1_pat" class="form-control form-control-sm"
+                  placeholder="Patrimônio"></div>
             </div>
             <div class="row g-1 mb-2">
-              <div class="col-5"><input type="text" id="eq2_marca" class="form-control form-control-sm" placeholder="Marca (Eq 2)"></div>
-              <div class="col-4"><input type="text" id="eq2_serie" class="form-control form-control-sm" placeholder="Série"></div>
-              <div class="col-3"><input type="text" id="eq2_pat" class="form-control form-control-sm" placeholder="Patrimônio"></div>
+              <div class="col-5"><input type="text" id="eq2_marca" class="form-control form-control-sm"
+                  placeholder="Marca (Eq 2)"></div>
+              <div class="col-4"><input type="text" id="eq2_serie" class="form-control form-control-sm"
+                  placeholder="Série"></div>
+              <div class="col-3"><input type="text" id="eq2_pat" class="form-control form-control-sm"
+                  placeholder="Patrimônio"></div>
             </div>
             <div class="row g-1 mb-2">
-              <div class="col-5"><input type="text" id="eq3_marca" class="form-control form-control-sm" placeholder="Marca (Eq 3)"></div>
-              <div class="col-4"><input type="text" id="eq3_serie" class="form-control form-control-sm" placeholder="Série"></div>
-              <div class="col-3"><input type="text" id="eq3_pat" class="form-control form-control-sm" placeholder="Patrimônio"></div>
+              <div class="col-5"><input type="text" id="eq3_marca" class="form-control form-control-sm"
+                  placeholder="Marca (Eq 3)"></div>
+              <div class="col-4"><input type="text" id="eq3_serie" class="form-control form-control-sm"
+                  placeholder="Série"></div>
+              <div class="col-3"><input type="text" id="eq3_pat" class="form-control form-control-sm"
+                  placeholder="Patrimônio"></div>
             </div>
             <div class="row g-1 mb-3">
-              <div class="col-5"><input type="text" id="eq4_marca" class="form-control form-control-sm" placeholder="Marca (Eq 4)"></div>
-              <div class="col-4"><input type="text" id="eq4_serie" class="form-control form-control-sm" placeholder="Série"></div>
-              <div class="col-3"><input type="text" id="eq4_pat" class="form-control form-control-sm" placeholder="Patrimônio"></div>
+              <div class="col-5"><input type="text" id="eq4_marca" class="form-control form-control-sm"
+                  placeholder="Marca (Eq 4)"></div>
+              <div class="col-4"><input type="text" id="eq4_serie" class="form-control form-control-sm"
+                  placeholder="Série"></div>
+              <div class="col-3"><input type="text" id="eq4_pat" class="form-control form-control-sm"
+                  placeholder="Patrimônio"></div>
             </div>
           </div>
 
           <!--MATERIAL UTILIZADO -->
           <h5 class="text-secondary border-bottom pb-2 mt-4">Material Utilizado</h5>
           <div class="row g-2 mb-3">
-            <div class="col-12"><input type="text" id="mat1" class="form-control form-control-sm" placeholder="Material 1"></div>
-            <div class="col-12"><input type="text" id="mat2" class="form-control form-control-sm" placeholder="Material 2"></div>
+            <div class="col-12"><input type="text" id="mat1" class="form-control form-control-sm"
+                placeholder="Material 1"></div>
+            <div class="col-12"><input type="text" id="mat2" class="form-control form-control-sm"
+                placeholder="Material 2"></div>
           </div>
 
           <!-- LAUDO TÉCNICO -->
           <h5 class="text-secondary border-bottom pb-2 mt-4">Laudo Técnico (Máx 8 linhas)</h5>
           <div class="mb-3">
-            <textarea id="laudo" class="form-control" rows="4" placeholder="Descreva os serviços realizados aqui. O texto fará a quebra de linha automaticamente."></textarea>
+            <textarea id="laudo" class="form-control" rows="4"
+              placeholder="Descreva os serviços realizados aqui. O texto fará a quebra de linha automaticamente."></textarea>
             <small class="text-muted">O sistema ajustará automaticamente para não passar das bordas.</small>
           </div>
 
@@ -219,9 +245,6 @@
   <script>
     document.getElementById('data').value = new Date().toLocaleDateString('pt-BR');
 
-    // ==========================================
-    // LÓGICA DE ASSINATURAS (MANTIDA IGUAL)
-    // ==========================================
     const canvas = document.getElementById("signature-canvas");
     const ctx = canvas.getContext("2d");
     const sigModal = new bootstrap.Modal(document.getElementById('signatureModal'));
@@ -232,7 +255,7 @@
 
     function resizeCanvas() {
       const rect = canvas.parentElement.getBoundingClientRect();
-      canvas.width = rect.width - 32; 
+      canvas.width = rect.width - 32;
       canvas.height = 300;
       ctx.lineWidth = 2.5;
       ctx.lineCap = "round";
@@ -283,12 +306,9 @@
     canvas.addEventListener("touchmove", draw, { passive: false });
     canvas.addEventListener("touchend", stopDrawing);
 
-    // ==========================================
-    // NOVA LÓGICA DE GERAR PDF VIA SUPABASE
-    // ==========================================
     document.getElementById("btnGerar").addEventListener("click", async function () {
       const btn = document.getElementById("btnGerar");
-      
+
       btn.disabled = true;
       btn.innerText = "A Processar PDF no Servidor...";
       btn.classList.remove('btn-danger', 'btn-primary');
@@ -297,7 +317,6 @@
       const oldBackupBtn = document.getElementById("btnBackupDownload");
       if (oldBackupBtn) oldBackupBtn.remove();
 
-      // 1. Monta o pacote de dados pegando os valores da tela
       const pacoteDeDados = {
         cliente: document.getElementById("cliente").value,
         data: document.getElementById("data").value,
@@ -336,7 +355,6 @@
       const anonKey = 'sb_publishable_brfo5xMWne-hmFekJS2lng_q0pMo4q6';
 
       try {
-        // 3. Envia os dados para a API (com os dois cabeçalhos de segurança)
         const response = await fetch(urlSupabase, {
           method: 'POST',
           headers: {
@@ -348,17 +366,15 @@
         });
 
         if (!response.ok) {
-            const erroTexto = await response.text();
-            throw new Error(erroTexto || "Erro ao conectar com o servidor.");
+          const erroTexto = await response.text();
+          throw new Error(erroTexto || "Erro ao conectar com o servidor.");
         }
 
-        // 4. Recebe o PDF pronto
         const blobPdf = await response.blob();
         const numChamado = document.getElementById("chamado").value || "Geral";
         const fileName = `RAT_${numChamado}.pdf`;
         const downloadUrl = URL.createObjectURL(blobPdf);
 
-        // 5. Opções de Download e Compartilhamento
         const btnBackup = document.createElement("a");
         btnBackup.id = "btnBackupDownload";
         btnBackup.href = downloadUrl;
@@ -379,7 +395,7 @@
           } catch (e) {
             console.log("Usuário cancelou o compartilhamento no celular.");
           }
-        } 
+        }
         else {
           const a = document.createElement("a");
           a.href = downloadUrl;
@@ -401,4 +417,5 @@
   </script>
 
 </body>
+
 </html>

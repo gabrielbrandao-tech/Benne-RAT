@@ -34,29 +34,28 @@
     }
   </style>
 </head>
-<!-- SCRIPT DE BLOQUEIO / CADEADO -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const authUrl = 'https://pfsspthucexjtthlesrh.supabase.co'; 
-    const authKey = 'sb_publishable_brfo5xMWne-hmFekJS2lng_q0pMo4q6';
-    const authSupabase = window.supabase.createClient(authUrl, authKey);
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const authUrl = 'https://pfsspthucexjtthlesrh.supabase.co';
+  const authKey = 'sb_publishable_brfo5xMWne-hmFekJS2lng_q0pMo4q6';
+  const authSupabase = window.supabase.createClient(authUrl, authKey);
 
-    async function verificarAcesso() {
-      const { data: { session } } = await authSupabase.auth.getSession();
+  async function verificarAcesso() {
+    const { data: { session } } = await authSupabase.auth.getSession();
 
-      if (!session) {
+    if (!session) {
+      window.location.replace('login.html');
+    }
+
+    authSupabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT' || !session) {
         window.location.replace('login.html');
       }
+    });
+  }
 
-      authSupabase.auth.onAuthStateChange((event, session) => {
-        if (event === 'SIGNED_OUT' || !session) {
-          window.location.replace('login.html');
-        }
-      });
-    }
-    
-    document.addEventListener("DOMContentLoaded", verificarAcesso);
-  </script>
+  document.addEventListener("DOMContentLoaded", verificarAcesso);
+</script>
 
 <body class="bg-light">
 
@@ -136,33 +135,70 @@
           <h5 class="text-secondary border-bottom pb-2 mt-3">Equipamento a Ser Atendido</h5>
           <div class="row g-2 mb-4">
             <div class="col-md-4">
-              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_nettop_lojas"><label class="form-check-label small" for="eq_nettop_lojas">Nettop Lojas</label></div>
-              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_nettop_regional"><label class="form-check-label small" for="eq_nettop_regional">Nettop / Desktop Regional</label></div>
-              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_nettop_tv"><label class="form-check-label small" for="eq_nettop_tv">Nettop TV</label></div>
-              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_android_box"><label class="form-check-label small" for="eq_android_box">Android Box</label></div>
-              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_notebook_lojas"><label class="form-check-label small" for="eq_notebook_lojas">Notebook Lojas</label></div>
-              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_notebook_corp"><label class="form-check-label small" for="eq_notebook_corp">Notebook Corporativo</label></div>
-              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_servidor"><label class="form-check-label small" for="eq_servidor">Servidor</label></div>
-              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_servidor_dlbc"><label class="form-check-label small" for="eq_servidor_dlbc">Servidor DLBC</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox"
+                  id="eq_nettop_lojas"><label class="form-check-label small" for="eq_nettop_lojas">Nettop Lojas</label>
+              </div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox"
+                  id="eq_nettop_regional"><label class="form-check-label small" for="eq_nettop_regional">Nettop /
+                  Desktop Regional</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox"
+                  id="eq_nettop_tv"><label class="form-check-label small" for="eq_nettop_tv">Nettop TV</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox"
+                  id="eq_android_box"><label class="form-check-label small" for="eq_android_box">Android Box</label>
+              </div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox"
+                  id="eq_notebook_lojas"><label class="form-check-label small" for="eq_notebook_lojas">Notebook
+                  Lojas</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox"
+                  id="eq_notebook_corp"><label class="form-check-label small" for="eq_notebook_corp">Notebook
+                  Corporativo</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox"
+                  id="eq_servidor"><label class="form-check-label small" for="eq_servidor">Servidor</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox"
+                  id="eq_servidor_dlbc"><label class="form-check-label small" for="eq_servidor_dlbc">Servidor
+                  DLBC</label></div>
             </div>
             <div class="col-md-4">
-              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_teclado"><label class="form-check-label small" for="eq_teclado">Teclado</label></div>
-              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_mouse"><label class="form-check-label small" for="eq_mouse">Mouse</label></div>
-              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_monitor"><label class="form-check-label small" for="eq_monitor">Monitor</label></div>
-              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_scanner"><label class="form-check-label small" for="eq_scanner">Scanner de Cheques</label></div>
-              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_imp_recibos"><label class="form-check-label small" for="eq_imp_recibos">Impressora de recibos</label></div>
-              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_leitora_doc"><label class="form-check-label small" for="eq_leitora_doc">Leitora de documentos</label></div>
-              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_leitora_barras"><label class="form-check-label small" for="eq_leitora_barras">Leitora de código de barras</label></div>
-              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_imp_autenticadora"><label class="form-check-label small" for="eq_imp_autenticadora">Impressora Autenticadora</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_teclado"><label
+                  class="form-check-label small" for="eq_teclado">Teclado</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_mouse"><label
+                  class="form-check-label small" for="eq_mouse">Mouse</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_monitor"><label
+                  class="form-check-label small" for="eq_monitor">Monitor</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_scanner"><label
+                  class="form-check-label small" for="eq_scanner">Scanner de Cheques</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox"
+                  id="eq_imp_recibos"><label class="form-check-label small" for="eq_imp_recibos">Impressora de
+                  recibos</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox"
+                  id="eq_leitora_doc"><label class="form-check-label small" for="eq_leitora_doc">Leitora de
+                  documentos</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox"
+                  id="eq_leitora_barras"><label class="form-check-label small" for="eq_leitora_barras">Leitora de código
+                  de barras</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox"
+                  id="eq_imp_autenticadora"><label class="form-check-label small" for="eq_imp_autenticadora">Impressora
+                  Autenticadora</label></div>
             </div>
             <div class="col-md-4">
-              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_pinpad_cripto"><label class="form-check-label small" for="eq_pinpad_cripto">PinPad Cripto</label></div>
-              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_pin_liso"><label class="form-check-label small" for="eq_pin_liso">Pin Liso</label></div>
-              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_adaptador_pin"><label class="form-check-label small" for="eq_adaptador_pin">Adaptador Pin Liso (Azul)</label></div>
-              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_hub_usb"><label class="form-check-label small" for="eq_hub_usb">HUB USB</label></div>
-              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_leitor_digital"><label class="form-check-label small" for="eq_leitor_digital">Leitor de Digital</label></div>
-              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_webcam"><label class="form-check-label small" for="eq_webcam">Webcam</label></div>
-              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_telefone"><label class="form-check-label small" for="eq_telefone">Telefone Digital</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox"
+                  id="eq_pinpad_cripto"><label class="form-check-label small" for="eq_pinpad_cripto">PinPad
+                  Cripto</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox"
+                  id="eq_pin_liso"><label class="form-check-label small" for="eq_pin_liso">Pin Liso</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox"
+                  id="eq_adaptador_pin"><label class="form-check-label small" for="eq_adaptador_pin">Adaptador Pin Liso
+                  (Azul)</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_hub_usb"><label
+                  class="form-check-label small" for="eq_hub_usb">HUB USB</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox"
+                  id="eq_leitor_digital"><label class="form-check-label small" for="eq_leitor_digital">Leitor de
+                  Digital</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox" id="eq_webcam"><label
+                  class="form-check-label small" for="eq_webcam">Webcam</label></div>
+              <div class="form-check"><input class="form-check-input equip-check" type="checkbox"
+                  id="eq_telefone"><label class="form-check-label small" for="eq_telefone">Telefone Digital</label>
+              </div>
             </div>
           </div>
 
@@ -340,7 +376,6 @@
     canvas.addEventListener("touchmove", draw, { passive: false });
     canvas.addEventListener("touchend", stopDrawing);
 
-    // GERAR O PDF VIA SUPABASE
     document.getElementById("btnGerar").addEventListener("click", async function () {
       const btn = document.getElementById("btnGerar");
 
@@ -352,20 +387,18 @@
       const oldBackupBtn = document.getElementById("btnBackupDownload");
       if (oldBackupBtn) oldBackupBtn.remove();
 
-      // Mapeia os Checkboxes para enviar ao servidor
       const idsEquipamentos = [
         'eq_nettop_lojas', 'eq_nettop_regional', 'eq_nettop_tv', 'eq_android_box', 'eq_notebook_lojas', 'eq_notebook_corp', 'eq_servidor', 'eq_servidor_dlbc',
         'eq_teclado', 'eq_mouse', 'eq_monitor', 'eq_scanner', 'eq_imp_recibos', 'eq_leitora_doc', 'eq_leitora_barras', 'eq_imp_autenticadora',
         'eq_pinpad_cripto', 'eq_pin_liso', 'eq_adaptador_pin', 'eq_hub_usb', 'eq_leitor_digital', 'eq_webcam', 'eq_telefone'
       ];
-      
+
       const equipamentosMarcados = {};
       idsEquipamentos.forEach(id => {
         const el = document.getElementById(id);
         equipamentosMarcados[id] = el ? el.checked : false;
       });
 
-      // Constrói o JSON com todos os dados do formulário
       const pacoteDeDados = {
         chamado: document.getElementById("chamado").value,
         agencia: document.getElementById("agencia").value,
@@ -404,7 +437,7 @@
       };
 
       const urlSupabase = 'https://pfsspthucexjtthlesrh.supabase.co/functions/v1/santander-api';
-      const anonKey = 'sb_publishable_brfo5xMWne-hmFekJS2lng_q0pMo4q6'; 
+      const anonKey = 'sb_publishable_brfo5xMWne-hmFekJS2lng_q0pMo4q6';
 
       try {
         const response = await fetch(urlSupabase, {
@@ -418,8 +451,8 @@
         });
 
         if (!response.ok) {
-            const erroTexto = await response.text();
-            throw new Error(erroTexto || "Erro ao conectar com o servidor.");
+          const erroTexto = await response.text();
+          throw new Error(erroTexto || "Erro ao conectar com o servidor.");
         }
 
         const blobPdf = await response.blob();
@@ -447,7 +480,7 @@
           } catch (e) {
             console.log("Usuário cancelou o compartilhamento no celular.");
           }
-        } 
+        }
         else {
           const a = document.createElement("a");
           a.href = downloadUrl;
@@ -466,4 +499,5 @@
     });
   </script>
 </body>
+
 </html>
